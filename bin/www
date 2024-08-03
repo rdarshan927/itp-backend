@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+
+const app = require('../index');
+const http = require('http');
+
+const PORT = process.env.PORT || 5002;
+
+const server = http.createServer(app);
+
+server.listen(PORT, () => {
+  console.log(`Flower farm management is listening on port ${PORT}`);
+});
