@@ -9,6 +9,7 @@ const app = express();
 
 // import Route files here
 const employeeRole = require('./routes/EmployeeRolesRoute');
+const sheporaUsers = require('./routes/SheporaUsersRoutes');
 
 
 
@@ -28,6 +29,7 @@ connectDB();
 
 // Routes here
 app.use('/api', employeeRole);
+app.use('/api', sheporaUsers);
 
 
 // Serve static files from the public directory
