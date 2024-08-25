@@ -9,6 +9,8 @@ const app = express();
 
 // import Route files here
 const employeeRole = require('./routes/EmployeeRolesRoute');
+const cart = require('./routes/CartRoute');
+const stripepay = require('./routes/PaymentRoute');
 
 
 
@@ -17,6 +19,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(logger('dev'));
 app.use(express.urlencoded({ extended: true }))
+app.use(cors())
 
 app.use(cors({
   origin: process.env.CLIENT_URL,
@@ -28,6 +31,8 @@ connectDB();
 
 // Routes here
 app.use('/api', employeeRole);
+app.use('/api', cart);
+app.use('/api', stripepay)
 
 
 // Serve static files from the public directory
