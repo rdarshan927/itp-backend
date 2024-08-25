@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const User = require("../models/SheporaUsersModel");
+const jwt = require('jsonwebtoken');
 
 // Create User Controller
 const createUsers = async (req, res, next) => {
@@ -50,6 +51,52 @@ const createUsers = async (req, res, next) => {
         console.error(err); // Log the error for debugging
         return res.status(500).json({ message: "Error occurred while processing your request." });
     }
+
+};
+const login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        const user = await User.findOne({ email })
+
+        const errorMsg = 'Auth failed email or password is wrong';
+        if (!user) {
+            return res.status(403)
+                .json({ message: errorMsg, success: false });
+        }
+        const isPassEqual = await bcrypt.compare(password, user.password);
+
+        if (!isPassEqual) {
+            return res.status(403)
+                .json({ message: errorMsg, success: false });
+        }
+        const jwtToken = jwt.sign(
+            { email: user.email, _id: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        )
+        console.log("session created")
+
+        res.status(200)
+            .json({
+                message: "Login Success",
+                success: true,
+                jwtToken,
+                email,
+                name: user.name
+            })
+            
+    } catch (err) {
+        res.status(500)
+            .json({
+                message: "Internal server errror",
+                success: false
+            })
+    }
+}
+
+
+module.exports = { createUsers, login };
 };
 //forgetpassword
 const forgotPassword = async (req, res) => {
