@@ -11,6 +11,7 @@ const app = express();
 const employeeRole = require('./routes/EmployeeRolesRoute');
 const cart = require('./routes/CartRoute');
 const stripepay = require('./routes/PaymentRoute');
+const sheporaUsers = require('./routes/SheporaUsersRoutes');
 
 
 
@@ -33,6 +34,7 @@ connectDB();
 app.use('/api', employeeRole);
 app.use('/api', cart);
 app.use('/api', stripepay)
+app.use('/api', sheporaUsers);
 
 
 // Serve static files from the public directory
