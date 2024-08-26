@@ -9,6 +9,8 @@ const app = express();
 
 // import Route files here
 const employeeRole = require('./routes/EmployeeRolesRoute');
+const packingroutes = require('./routes/PackingRoute');
+
 
 
 
@@ -28,6 +30,7 @@ connectDB();
 
 // Routes here
 app.use('/api', employeeRole);
+app.use('/packing', packingroutes);
 
 
 // Serve static files from the public directory
