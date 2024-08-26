@@ -11,6 +11,9 @@ const app = express();
 const employeeRole = require('./routes/EmployeeRolesRoute');
 const packingroutes = require('./routes/PackingRoute');
 
+const cart = require('./routes/CartRoute');
+const stripepay = require('./routes/PaymentRoute');
+const sheporaUsers = require('./routes/SheporaUsersRoutes');
 
 
 
@@ -19,6 +22,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(logger('dev'));
 app.use(express.urlencoded({ extended: true }))
+app.use(cors())
 
 app.use(cors({
   origin: process.env.CLIENT_URL,
@@ -31,6 +35,9 @@ connectDB();
 // Routes here
 app.use('/api', employeeRole);
 app.use('/packing', packingroutes);
+app.use('/api', cart);
+app.use('/api', stripepay)
+app.use('/api', sheporaUsers);
 
 
 // Serve static files from the public directory
