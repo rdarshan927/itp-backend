@@ -63,13 +63,15 @@ const getSingleResourceItem = async (req, res) => {
 // Update a resource
 const updateResourceItem = async (req, res) => {
   try {
-    const resourceId = req.params.id;
-    if (!resourceId) {
-      return res.status(400).json({ message: "Resource ID is required" });
+    const productID = req.params.id;
+
+    if (!productID) {
+      return res.status(400).json({ message: "Product ID is required" });
     }
 
-    const { quantity } = req.body;
+    const { name, category, quantity } = req.body;
 
+    // Validate quantity
     if (
       quantity !== undefined &&
       (typeof quantity !== "number" || quantity <= 0)
@@ -79,19 +81,34 @@ const updateResourceItem = async (req, res) => {
         .json({ message: "Quantity must be a positive number" });
     }
 
-    const found = await ResourceInventoryModel.findById(resourceId);
+    // Validate name and category
+    if (name !== undefined && typeof name !== "string") {
+      return res.status(400).json({ message: "Name must be a string" });
+    }
+
+    if (category !== undefined && typeof category !== "string") {
+      return res.status(400).json({ message: "Category must be a string" });
+    }
+
+    // Find the resource item by productID
+    const found = await ResourceInventoryModel.findOne({ productID });
 
     if (!found) {
       return res.status(404).json({ message: "Resource not found" });
     }
 
     // Update fields
+    if (name !== undefined) {
+      found.name = name;
+    }
+    if (category !== undefined) {
+      found.category = category;
+    }
     if (quantity !== undefined) {
       found.quantity = quantity;
     }
 
-    // Add other fields if necessary, e.g., name, category
-
+    // Save the updated resource item
     await found.save();
     res.status(200).json(found);
   } catch (error) {
@@ -100,28 +117,33 @@ const updateResourceItem = async (req, res) => {
   }
 };
 
+module.exports = updateResourceItem;
+
 // Delete a resource
 const deleteResourceItem = async (req, res) => {
   try {
-    const resourceId = req.params.id;
+    const productID = req.params.id;
 
-    if (!mongoose.Types.ObjectId.isValid(resourceId)) {
-      return res.status(404).json({ error: "The ID provided isn't valid!" });
+    // Check if productID is provided
+    if (!productID) {
+      return res.status(400).json({ message: "Product ID is required!" });
     }
 
-    if (!resourceId) {
-      return res.status(400).json({ message: "Resource ID is required!" });
-    }
+    // Validate the productID format if necessary (optional, depending on your use case)
+    // For example, check if it's a string and matches expected pattern
 
-    const existResource = await ResourceInventoryModel.findByIdAndDelete(
-      resourceId
-    );
+    // Find and delete the resource item by productID
+    const result = await ResourceInventoryModel.findOneAndDelete({ productID });
 
-    if (!existResource) {
+    // Check if a document was found and deleted
+    if (!result) {
       return res.status(404).json({ message: "Resource not found!" });
     }
 
-    res.status(200).json(existResource);
+    res.status(200).json({
+      message: "Resource deleted successfully!",
+      deletedResource: result,
+    });
   } catch (error) {
     res
       .status(500)
