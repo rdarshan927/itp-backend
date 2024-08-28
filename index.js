@@ -9,6 +9,8 @@ const app = express();
 
 // import Route files here
 const employeeRole = require('./routes/EmployeeRolesRoute');
+const inventoryStuffPayment = require('./routes/InventoryStuffRoutes');
+const EmployeeSalary = require('./routes/EmployeeSalaryRoute');
 
 
 
@@ -28,6 +30,8 @@ connectDB();
 
 // Routes here
 app.use('/api', employeeRole);
+app.use('/api', inventoryStuffPayment);
+app.use('/api', EmployeeSalary);
 
 
 // Serve static files from the public directory
