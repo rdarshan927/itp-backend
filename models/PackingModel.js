@@ -1,33 +1,41 @@
 
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;4
+const mongoose = require('mongoose')
 
-const PackingSchema = new Schema({
+
+const PackingSchema = new mongoose.Schema({
     orderId: {
-        type: String,//datatype
-        required: true//validate
+        type: String,
+        required: true,
+        unique: true
     },
-    receiverName: {
-        type: Number,
-        required: true
-    },
-    receiverAddress: {
+    receivername: {
         type: String,
         required: true
     },
-    receiverContactNo: {
-        type: Number,
-        required: true
-    },
-    senderEmail: {
+    receiveraddress: {
         type: String,
         required: true
     },
-    packingDate: {
+    receivercontact: {
+        type: Number,
+        required: true
+    },
+    senderemail: {
+        type: String,
+        required: true
+    },
+    packingdate: {
         type: Date,
-        required: true
+        required: true,
+        validate: {
+            validator: function (value) {
+                return value <= new Date();
+            },
+            message: props => `Packing date (${props.value}) cannot be in the future!`
+        }
     
     }
 });
 
 module.exports = mongoose.model('Packing', PackingSchema);
+

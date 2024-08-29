@@ -1,10 +1,14 @@
 
 const express = require('express');
 const router = express.Router();
-const Packing = require("../models/PackingModel"); 
+
 const PackingController = require('../controllers/PackingController');
 
-router.get("/get", PackingController.getAllpacking);
-router.post("/ádd", PackingController.addpacking);
+// Packing routes
+router.get("/packing/get", PackingController.getpacking);//read
+router.post("/packing/add", PackingController.createpacking);//create
+router.put('packing/update/:id', PackingController.editpacking); // Update
+router.delete('packing/delete/:id', PackingController.removepacking); // Delete
+
 
 module.exports = router; 

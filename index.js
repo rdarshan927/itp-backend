@@ -10,10 +10,11 @@ const app = express();
 // import Route files here
 const employeeRole = require('./routes/EmployeeRolesRoute');
 const packingroutes = require('./routes/PackingRoute');
-
+const ordersroutes = require('./routes/OrdersRoute');
 const cart = require('./routes/CartRoute');
 const stripepay = require('./routes/PaymentRoute');
 const sheporaUsers = require('./routes/SheporaUsersRoutes');
+
 
 
 
@@ -34,10 +35,11 @@ connectDB();
 
 // Routes here
 app.use('/api', employeeRole);
-app.use('/packing', packingroutes);
+app.use('/api', packingroutes);
 app.use('/api', cart);
 app.use('/api', stripepay)
 app.use('/api', sheporaUsers);
+app.use('/api', ordersroutes);
 
 
 // Serve static files from the public directory
