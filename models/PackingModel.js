@@ -34,6 +34,10 @@ const PackingSchema = new mongoose.Schema({
             message: props => `Packing date (${props.value}) cannot be in the future!`
         }
     
+    },
+    currentstatus: {
+        type: String,
+        required: true
     }
 });
 

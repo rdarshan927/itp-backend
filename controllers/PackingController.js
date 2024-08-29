@@ -22,7 +22,7 @@ const getpacking = async (req, res) => {
 const createpacking = async (req, res) => {
 try {
     console.log('aawaaaa')
-    const { orderId, receivername, receiveraddress, receivercontact, senderemail,packingdate } = req.body;
+    const { orderId, receivername, receiveraddress, receivercontact, senderemail,packingdate, currentstatus } = req.body;
 
 
     // Check if orderId or email already exists (case insensitive)
@@ -40,7 +40,8 @@ try {
             receiveraddress,
             receivercontact,
             senderemail,
-            packingdate
+            packingdate,
+            currentstatus
         });
         console.log('aawaaaa')
         await newpacking.save();
@@ -67,7 +68,7 @@ const editpacking = async (req, res) => {
             return res.status(404).json({ message: 'Invalid order ID!' });
         }
 
-        const updatedpacking = await packingModel.findByIdAndUpdate(id, req.body, { new: true });
+        const updatedpacking = await PackingModel.findByIdAndUpdate(id, req.body, { new: true });
 
         if (!updatedpacking) {
             return res.status(404).json({ message: 'Package not found!' });
