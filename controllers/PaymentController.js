@@ -1,21 +1,19 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET);
 const Invoice = require('../models/InvoiceModel');
 const Order = require('../models/OrdersModel');
-const PaymentData = require('../models/PaymentModel')
-const mongoose = require('mongoose')
+const PaymentData = require('../models/PaymentModel');
+const UserModel = require('../models/SheporaUsersModel');
+const mongoose = require('mongoose');
 
 
 const handlePayment = async(req, res) => {
-    console.log("Request body:", req.body);
     const {products} = req.body;
 
     if (!products || !Array.isArray(products)) {
         return res.status(400).json({ error: "Invalid request, products are missing or not an array" });
     }
 
-    let userId = req.body.userId;
-    userId = 'CS123';
-    // let cart = JSON.stringify(products);
+    let userId = req.params.id;
 
     const lineItems = products.map((product)=>({
         price_data:{
@@ -46,12 +44,11 @@ const handlePayment = async(req, res) => {
             mode:"payment",
             success_url:`http://localhost:3000/paymentsuccess?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url:`http://localhost:3000/cancel?session_id={CHECKOUT_SESSION_ID}`,
-            client_reference_id: 'guest_user',
+            client_reference_id: userId,
             metadata: {
                 uniqueId
             }
         })
-        console.log("came here")
 
         res.cookie('stripeSessionId', session.id, { httpOnly: true, secure: true }); // until login is done
         res.json({id:session.id})
@@ -76,7 +73,7 @@ const stripepay = async (req, res) => {
     // Handle the event
     switch (eventType) {
         case 'checkout.session.completed':
-            // Now, call your function to save the invoice and order
+            // function to save the invoice and order
             await handlePaymentSuccess(data);
             break;
         default:
@@ -111,8 +108,10 @@ const handlePaymentSuccess = async (session) => {
         console.log(stripeSessionId, metadata, amountPaid);
         
         const { uniqueId } = metadata;
-        console.log(uniqueId);
+        const email = session.client_reference_id;
+
         const paymentData = await PaymentData.findOne({ uniqueId });
+        const receiverData = await UserModel.findOne({ email });
         console.log('this is the payment data : ', paymentData);
 
         if(!paymentData){
@@ -123,16 +122,17 @@ const handlePaymentSuccess = async (session) => {
         const products = paymentData.products;
         const finalAmountPaid = amountPaid/100;
         const orderID = await generateOrderID();
-        const email = "sample@gmail.com";
-        const contact = "0777777777";
-        const add = "main street"
+        const contact = receiverData.receiverPhoneNumber;
+        const add = receiverData.deliveryAddress;
+        const name = receiverData.name;
+        const userInfo = email + ", " + receiverData.name;
 
         // Create a new order
         console.log('came to payment success!')
         const newOrder = new Order({
             orderID: orderID,
             userEmail: email,
-            receiverName: session.client_reference_id,
+            receiverName: name,
             receiverContact: contact,
             receiverAddress: add,
             products: products,
@@ -152,6 +152,7 @@ const handlePaymentSuccess = async (session) => {
 
         const newInvoice = new Invoice({
             userID: session.client_reference_id,
+            userInfo: userInfo,
             invoiceID: invoiceID,
             amountPaid: finalAmountPaid,
             paymentMethod: paymentMethod,

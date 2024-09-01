@@ -10,6 +10,10 @@ const InvoiceModel = new mongoose.Schema({
         required: true,
         unique: true
     },
+    userInfo: {
+        type: String,
+        required: true
+    },
     amountPaid: {
         type: Number,
         required: true
