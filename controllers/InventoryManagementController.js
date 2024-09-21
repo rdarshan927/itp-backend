@@ -189,11 +189,9 @@ const getSalesInventoryItems = async (req, res) => {
     const inventoryItems = await SalesInventoryModel.find();
     res.status(200).json(inventoryItems);
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "There was an error while retrieving the inventory items!",
-      });
+    res.status(500).json({
+      message: "There was an error while retrieving the inventory items!",
+    });
     console.log(error);
   }
 };
@@ -201,7 +199,7 @@ const getSalesInventoryItems = async (req, res) => {
 // Get a single sales inventory item by ID
 const getSingleSalesInventoryItem = async (req, res) => {
   try {
-    const inventoryItem = await SalesInventoryModel.findById(req.params.id);
+    const inventoryItem = await SalesInventoryModel.findOne(req.params.id);
 
     if (!inventoryItem) {
       return res
@@ -225,7 +223,7 @@ const updateSalesInventoryItem = async (req, res) => {
       return res.status(400).json({ message: "Product ID is required" });
     }
 
-    const inventoryItem = await SalesInventoryModel.findById(productID);
+    const inventoryItem = await SalesInventoryModel.findOne({ productID });
 
     if (!inventoryItem) {
       return res.status(404).json({ message: "Inventory item not found" });
@@ -255,9 +253,9 @@ const deleteSalesInventoryItem = async (req, res) => {
       return res.status(400).json({ message: "Product ID is required!" });
     }
 
-    const deletedInventoryItem = await SalesInventoryModel.findByIdAndDelete(
-      productID
-    );
+    const deletedInventoryItem = await SalesInventoryModel.findOneAndDelete({
+      productID,
+    });
 
     if (!deletedInventoryItem) {
       return res.status(404).json({ message: "Inventory item not found!" });
@@ -268,11 +266,9 @@ const deleteSalesInventoryItem = async (req, res) => {
       deletedInventoryItem: deletedInventoryItem,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: "There was an error while deleting the inventory item!",
-      });
+    res.status(500).json({
+      message: "There was an error while deleting the inventory item!",
+    });
     console.log(error);
   }
 };
