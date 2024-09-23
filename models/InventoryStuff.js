@@ -38,12 +38,6 @@ const rolesModel = new mongoose.Schema({
     totalPrice: {
         type: Number,
         default: 0,
-        validate: {
-            validator: function (value) {
-                return value >= this.price * this.amount; 
-            },
-            message: 'Total Price must be at least equal to price multiplied by amount'
-        }
     }
 });
 
