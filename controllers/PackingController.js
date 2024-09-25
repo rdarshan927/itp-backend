@@ -24,6 +24,25 @@ const getpacking = async (req, res) => {
 
 }
 
+// Get single packing by orderId (new function)
+const getPackingById = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        // Find the packing by the order ID
+        const packing = await PackingModel.findOne({ orderId: id });
+
+        if (packing) {
+            res.status(200).json(packing);
+        } else {
+            res.status(404).json({ message: 'Packing order not found' });
+        }
+    } catch (error) {
+        console.error("Error retrieving packing by ID:", error);
+        res.status(500).json({ message: 'Failed to retrieve packing!', error: error.message });
+    }
+};
+
 //data Insert
 const createpacking = async (req, res) => {
 try {
@@ -162,6 +181,7 @@ const generateQRCodePDF = async (req, res) => {
 
 module.exports = {
     getpacking,
+    getPackingById,
     createpacking,
     editpacking,
     removepacking,
