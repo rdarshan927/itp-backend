@@ -8,8 +8,19 @@ const DeliverySchema = new mongoose.Schema({
     },
     senderEmail: {
         type: String,
-        required: true,
-        unique: true
+        required: true
+    },
+    receivername: {
+        type: String,
+        required: true
+    },
+    receiveraddress: {
+        type: String,
+        required: true
+    },
+    receivercontact: {
+        type: Number,
+        required: true
     },
     delivererName: {
         type: String,
