@@ -10,6 +10,7 @@ const app = express();
 // import Route files here
 const employeeRole = require('./routes/EmployeeRolesRoute');
 const packingroutes = require('./routes/PackingRoute');
+const deliveryroutes = require('./routes/DeliveryRoute');
 const ordersroutes = require('./routes/OrdersRoute');
 const cart = require('./routes/CartRoute');
 const stripepay = require('./routes/PaymentRoute');
@@ -36,6 +37,7 @@ connectDB();
 // Routes here
 app.use('/api', employeeRole);
 app.use('/api', packingroutes);
+app.use('/api', deliveryroutes);
 app.use('/api', cart);
 app.use('/api', stripepay)
 app.use('/api', sheporaUsers);

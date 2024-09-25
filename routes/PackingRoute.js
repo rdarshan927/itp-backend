@@ -9,6 +9,9 @@ router.get("/packing/get", PackingController.getpacking);//read
 router.post("/packing/add", PackingController.createpacking);//create
 router.put('/packing/update/:id', PackingController.editpacking); // Update
 router.delete('/packing/delete/:id', PackingController.removepacking); // Delete
+router.get('/packing/qrcode/:id', PackingController.generateQRCodePDF);
+
+
 
 
 module.exports = router; 

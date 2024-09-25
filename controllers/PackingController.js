@@ -1,5 +1,11 @@
 const mongoose = require('mongoose');
 const PackingModel = require('../models/PackingModel');
+const PDFDocument = require('pdfkit');
+//const fs = require('fs');
+const QRCode = require('qrcode');  // Import the QRCode library
+
+
+
 
 
 //data display
@@ -104,9 +110,60 @@ const removepacking = async (req, res) => {
         res.status(500).json({ message: 'Failed to delete the package!', error: error.message });
     }
 }
+const generateQRCodePDF = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Find the packing data by ID
+        const packingData = await PackingModel.findById(id);
+        if (!packingData) {
+            return res.status(404).json({ message: 'Packing not found!' });
+        }
+
+        // Data to encode into the QR code
+        const dataToEncode = `
+        Order ID: ${packingData.orderId}
+        Receiver Name: ${packingData.receivername}
+        Receiver Address: ${packingData.receiveraddress}
+        Receiver Contact: ${packingData.receivercontact}
+        Sender Email: ${packingData.senderemail}
+        Packing Date: ${packingData.packingdate}
+        Current Status: ${packingData.currentstatus}
+        `;
+
+        // Generate the QR code as a Data URL
+        const qrCodeUrl = await QRCode.toDataURL(dataToEncode);
+
+        // Create a new PDF document
+        const doc = new PDFDocument();
+
+        // Set the headers to indicate a file download (PDF)
+        res.setHeader('Content-Disposition', 'attachment; filename=packing-qrcode.pdf');
+        res.setHeader('Content-Type', 'application/pdf');
+
+        // Pipe the PDF to the response
+        doc.pipe(res);
+
+        // Add content to the PDF
+        doc.fontSize(18).text(`Packing QR Code for Order ID: ${packingData.orderId}`, { align: 'center' });
+        doc.image(qrCodeUrl, {
+            fit: [200, 200],
+            align: 'center',
+            valign: 'center'
+        });
+
+        // Finalize the PDF document
+        doc.end();
+    } catch (error) {
+        console.error("Error generating QR code as PDF:", error);
+        res.status(500).json({ message: 'Failed to generate QR code PDF!', error: error.message });
+    }
+};
+
 module.exports = {
     getpacking,
     createpacking,
     editpacking,
     removepacking,
-}
+    generateQRCodePDF  // Export the QR code PDF generation function
+};
