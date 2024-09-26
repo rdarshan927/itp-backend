@@ -6,6 +6,6 @@ const OrderController = require('../controllers/OrdersController');
 router.get('/orders', OrderController.getOrders);
 
 // Fetch and generate PDF
-router.get('/orders/download-pdf', OrderController.getOrdersPDF);
+// router.get('/orders/download-pdf', OrderController.getOrdersPDF);
 
 module.exports = router;
