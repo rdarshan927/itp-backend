@@ -1,4 +1,5 @@
 const ResourceInventoryModel = require("../models/ResourceInventoryModel");
+const SalesInventoryModel = require("../models/SalesInventoryModel");
 const mongoose = require("mongoose");
 
 // Create a new resource
@@ -152,10 +153,135 @@ const deleteResourceItem = async (req, res) => {
   }
 };
 
+const createSalesInventoryItem = async (req, res) => {
+  try {
+    const { productID, name, category, quantity, price, imageData } = req.body;
+    const alreadyExist = await SalesInventoryModel.findOne({ productID });
+
+    if (alreadyExist) {
+      return res
+        .status(400)
+        .json({ message: "Product has already been added to the inventory!" });
+    }
+
+    const newInventoryItem = new SalesInventoryModel({
+      productID,
+      name,
+      category,
+      quantity,
+      price,
+      imageData,
+    });
+
+    await newInventoryItem.save();
+    return res
+      .status(201)
+      .json({ message: "Product has been added successfully." });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to add the product." });
+    console.log(error);
+  }
+};
+
+// Get all sales inventory items
+const getSalesInventoryItems = async (req, res) => {
+  try {
+    const inventoryItems = await SalesInventoryModel.find();
+    res.status(200).json(inventoryItems);
+  } catch (error) {
+    res.status(500).json({
+      message: "There was an error while retrieving the inventory items!",
+    });
+    console.log(error);
+  }
+};
+
+// Get a single sales inventory item by ID
+const getSingleSalesInventoryItem = async (req, res) => {
+  try {
+    const inventoryItem = await SalesInventoryModel.findOne(req.params.id);
+
+    if (!inventoryItem) {
+      return res
+        .status(404)
+        .json({ message: "No inventory item matches the provided ID!" });
+    }
+    res.status(200).json(inventoryItem);
+  } catch (error) {
+    res.status(500).json({ message: "There was an internal error!" });
+    console.log(error);
+  }
+};
+
+// Update a sales inventory item
+const updateSalesInventoryItem = async (req, res) => {
+  try {
+    const { name, category, quantity, price, imageData } = req.body;
+    const productID = req.params.id;
+
+    if (!productID) {
+      return res.status(400).json({ message: "Product ID is required" });
+    }
+
+    const inventoryItem = await SalesInventoryModel.findOne({ productID });
+
+    if (!inventoryItem) {
+      return res.status(404).json({ message: "Inventory item not found" });
+    }
+
+    // Updating fields if provided
+    if (name) inventoryItem.name = name;
+    if (category) inventoryItem.category = category;
+    if (quantity) inventoryItem.quantity = quantity;
+    if (price) inventoryItem.price = price;
+    if (imageData) inventoryItem.imageData = imageData;
+
+    await inventoryItem.save();
+    res.status(200).json(inventoryItem);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating inventory item" });
+    console.log(error);
+  }
+};
+
+// Delete a sales inventory item
+const deleteSalesInventoryItem = async (req, res) => {
+  try {
+    const productID = req.params.id;
+
+    if (!productID) {
+      return res.status(400).json({ message: "Product ID is required!" });
+    }
+
+    const deletedInventoryItem = await SalesInventoryModel.findOneAndDelete({
+      productID,
+    });
+
+    if (!deletedInventoryItem) {
+      return res.status(404).json({ message: "Inventory item not found!" });
+    }
+
+    res.status(200).json({
+      message: "Inventory item deleted successfully!",
+      deletedInventoryItem: deletedInventoryItem,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "There was an error while deleting the inventory item!",
+    });
+    console.log(error);
+  }
+};
+
 module.exports = {
   createResourceItem,
   getResourceItems,
   getSingleResourceItem,
   updateResourceItem,
   deleteResourceItem,
+  createSalesInventoryItem,
+  getSalesInventoryItems,
+  getSingleSalesInventoryItem,
+  updateSalesInventoryItem,
+  deleteSalesInventoryItem,
 };
