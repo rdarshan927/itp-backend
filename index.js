@@ -10,11 +10,14 @@ const app = express();
 // import Route files here
 const employeeRole = require('./routes/EmployeeRolesRoute');
 const sheporaUsers = require('./routes/SheporaUsersRoutes');
+const harvestData = require("./routes/HarvestRout");
+
 
 
 
 // Middleware to parse JSON
 app.use(express.json());
+
 app.use(cookieParser());
 app.use(logger('dev'));
 app.use(express.urlencoded({ extended: true }))
@@ -30,6 +33,7 @@ connectDB();
 // Routes here
 app.use('/api', employeeRole);
 app.use('/api', sheporaUsers);
+app.use ('/harvest',harvestData)
 
 
 // Serve static files from the public directory
