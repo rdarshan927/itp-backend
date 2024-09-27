@@ -5,13 +5,13 @@ const rolesModel = new mongoose.Schema({
         type: Number,
         required: [true, 'Stuff ID is required'],
         unique: true, 
-        min: [4, 'Stuff ID must be at least 4'] 
+        min: [5, 'Stuff ID must be 5 digits long'], 
     },
     stuffName: {
         type: String,
         required: [true, 'Stuff Name is required'],
-        minlength: [5, 'Stuff Name must be at least 5 characters long'], 
-        maxlength: [100, 'Stuff Name cannot exceed 100 characters'] 
+        minlength: [10, 'Stuff Name must be at least 10 characters long'], 
+        maxlength: [20, 'Stuff Name cannot exceed 20 characters'] 
     },
     price: {
         type: Number,
