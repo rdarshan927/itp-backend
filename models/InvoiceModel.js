@@ -43,6 +43,10 @@ const InvoiceModel = new mongoose.Schema({
             required: true
         }
     }],
+    validity: {
+        type: String,
+        default: "valid"
+    },
     orderID: {
         type: String,
         required: true,
@@ -52,19 +56,3 @@ const InvoiceModel = new mongoose.Schema({
 
 const Invoice = mongoose.model('Invoice', InvoiceModel);
 module.exports = Invoice;
-
-// const InvoiceSchema = new Schema({
-//     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-//     invoiceNumber: { type: String, required: true, unique: true },
-//     amountPaid: { type: Number, required: true },
-//     paymentDate: { type: Date, default: Date.now },
-//     paymentMethod: { type: String, required: true },  // e.g., "Credit Card"
-//     stripeSessionId: { type: String, required: true },  // To track with Stripe
-//     items: [
-//         {
-//             productId: { type: Schema.Types.ObjectId, ref: 'Product' },
-//             quantity: { type: Number, required: true },
-//             price: { type: Number, required: true },
-//         }
-//     ]
-// });

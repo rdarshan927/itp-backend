@@ -127,4 +127,31 @@ const deleteCart = async(req, res) => {
     }
 }
 
-module.exports = { createCart, getCart, getSingleCart, updateCart, deleteCart, getDelivery } 
+const updateDelivery = async (req, res) => {
+    try {
+        const email = req.params.id;
+        const {receiverPhoneNumber, deliveryAddress} = req.body;
+
+        const response = await UserModel.findOneAndUpdate(
+            { email },
+            { 
+                receiverPhoneNumber, 
+                deliveryAddress
+            },
+            { new: true } 
+        );
+
+        if (!response) {
+            return res.status(400).json({ message: 'User doesn\'t exist!' });
+        }
+
+        res.status(200).json(response);
+        console.log("success", response);
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'There was an error while updating the delivery details!' });
+    }
+}
+
+module.exports = { createCart, getCart, getSingleCart, updateCart, deleteCart, getDelivery, updateDelivery } 
