@@ -1,3 +1,4 @@
+const InventoryRecordsModel = require("../models/InventoryRecordsModel");
 const ResourceInventoryModel = require("../models/ResourceInventoryModel");
 const SalesInventoryModel = require("../models/SalesInventoryModel");
 const mongoose = require("mongoose");
@@ -273,6 +274,43 @@ const deleteSalesInventoryItem = async (req, res) => {
   }
 };
 
+// Get all Inventory Records
+const getAllInventoryRecords = async (req, res) => {
+  try {
+    const inventoryRecords = await InventoryRecordsModel.find();
+    res.status(200).json(inventoryRecords);
+  } catch (error) {
+    res.status(500).json({
+      message: "There was an error while retrieving the inventory records!",
+    });
+    console.log(error);
+  }
+};
+
+// Create an Inventory Record
+const createInventoryRecord = async (req, res) => {
+  try {
+    const { productID, name, category, action, quantity, price } = req.body;
+
+    const newInventoryRecord = new InventoryRecordsModel({
+      productID,
+      name,
+      action,
+      quantity,
+      category,
+      price,
+    });
+
+    await newInventoryRecord.save();
+    return res
+      .status(201)
+      .json({ message: "Record has been added successfully." });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to add the Record." });
+    console.log(error);
+  }
+};
+
 module.exports = {
   createResourceItem,
   getResourceItems,
@@ -284,4 +322,6 @@ module.exports = {
   getSingleSalesInventoryItem,
   updateSalesInventoryItem,
   deleteSalesInventoryItem,
+  getAllInventoryRecords,
+  createInventoryRecord,
 };
