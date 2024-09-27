@@ -9,6 +9,7 @@ const app = express();
 
 // import Route files here
 const employeeRole = require('./routes/EmployeeRolesRoute');
+const Sales = require('./routes/SalesRoute')
 const inventoryStuffPayment = require('./routes/InventoryStuffRoutes');
 const EmployeeSalary = require('./routes/EmployeeSalaryRoute');
 const cart = require('./routes/CartRoute');
@@ -35,6 +36,7 @@ connectDB();
 
 // Routes here
 app.use('/api', employeeRole);
+app.use('/api', Sales);
 app.use('/api', inventoryStuffPayment);
 app.use('/api', EmployeeSalary);
 
