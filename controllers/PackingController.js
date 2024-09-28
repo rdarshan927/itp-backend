@@ -45,21 +45,19 @@ const getPackingById = async (req, res) => {
 
 //data Insert
 const createpacking = async (req, res) => {
-try {
-    console.log('aawaaaa')
-    const { orderId, receivername, receiveraddress, receivercontact, senderemail,packingdate, currentstatus } = req.body;
+    try {
+        const { orderId, receivername, receiveraddress, receivercontact, senderemail, packingdate, currentstatus } = req.body;
 
+        // Check if orderId or email already exists
+        const alreadyExist = await PackingModel.findOne({ 
+            $or: [{ orderId: new RegExp(`^${orderId}$`, 'i') }, { senderemail: new RegExp(`^${senderemail}$`, 'i') }] 
+        });
 
-    // Check if orderId or email already exists (case insensitive)
-      const alreadyExist = await PackingModel.findOne({ 
-        $or: [{ orderId: new RegExp(`^${orderId}$`, 'i') }, { senderemail: new RegExp(`^${senderemail}$`, 'i') }] 
-    });
-    console.log('aawaaaa')
-    if (alreadyExist) {
-        return res.status(400).json({ message: 'Order ID or Email already exists!' });
-    }
-    console.log('aawaaaa')
-    const  newpacking = new PackingModel({
+        if (alreadyExist) {
+            return res.status(400).json({ message: 'Order ID or Email already exists!' });
+        }
+
+        const newpacking = new PackingModel({
             orderId,
             receivername,
             receiveraddress,
@@ -68,20 +66,16 @@ try {
             packingdate,
             currentstatus
         });
-        console.log('aawaaaa')
+        
         await newpacking.save();
 
-        res.status(201).json({ message: 'Order  has been successfully added!' });
-        console.log('aawaaaa')
-
+        res.status(201).json({ message: 'Order has been successfully added!' });
     } catch (error) {
         console.error("Error adding order:", error);
         res.status(500).json({ message: 'Failed to add package!', error: error.message });
     }
+};
 
-    
-    
-}
 
 //data update
 
@@ -105,7 +99,8 @@ const editpacking = async (req, res) => {
         console.error("Error updating package:", error);
         res.status(500).json({ message: 'Failed to update the order!', error: error.message });
     }
-}
+};
+
 
 //data delete
 const removepacking = async (req, res) => {
@@ -129,6 +124,8 @@ const removepacking = async (req, res) => {
         res.status(500).json({ message: 'Failed to delete the package!', error: error.message });
     }
 }
+const { format } = require('date-fns'); // Add this import at the top of your file
+
 const generateQRCodePDF = async (req, res) => {
     try {
         const { id } = req.params;
@@ -139,6 +136,9 @@ const generateQRCodePDF = async (req, res) => {
             return res.status(404).json({ message: 'Packing not found!' });
         }
 
+        // Format the packing date to YYYY-MM-DD
+        const formattedDate = format(new Date(packingData.packingdate), 'yyyy-MM-dd');
+
         // Data to encode into the QR code
         const dataToEncode = `
         Order ID: ${packingData.orderId}
@@ -146,9 +146,9 @@ const generateQRCodePDF = async (req, res) => {
         Receiver Address: ${packingData.receiveraddress}
         Receiver Contact: ${packingData.receivercontact}
         Sender Email: ${packingData.senderemail}
-        Packing Date: ${packingData.packingdate}
+        Packing Date: ${formattedDate}  
         Current Status: ${packingData.currentstatus}
-        `;
+        `.trim();
 
         // Generate the QR code as a Data URL
         const qrCodeUrl = await QRCode.toDataURL(dataToEncode);
@@ -165,8 +165,9 @@ const generateQRCodePDF = async (req, res) => {
 
         // Add content to the PDF
         doc.fontSize(18).text(`Packing QR Code for Order ID: ${packingData.orderId}`, { align: 'center' });
+        doc.moveDown(); // Add some space
         doc.image(qrCodeUrl, {
-            fit: [200, 200],
+            fit: [200, 200], // Size of the QR code image
             align: 'center',
             valign: 'center'
         });
@@ -178,6 +179,7 @@ const generateQRCodePDF = async (req, res) => {
         res.status(500).json({ message: 'Failed to generate QR code PDF!', error: error.message });
     }
 };
+
 
 module.exports = {
     getpacking,
