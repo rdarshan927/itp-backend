@@ -50,7 +50,8 @@ app.use('/api', deliveryroutes);
 app.use('/api', cart);
 app.use('/api', stripepay);
 app.use('/api', sheporaUsers);
-app.use('/api', inventory);app.use('/api', ordersroutes);
+app.use('/api', inventory);
+app.use('/api', ordersroutes);
 
 app.use('/api', summaryCardRoute);
 app.use('/api',barchart);
