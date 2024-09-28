@@ -154,6 +154,7 @@ const deleteResourceItem = async (req, res) => {
   }
 };
 
+//sales inventory
 const createSalesInventoryItem = async (req, res) => {
   try {
     const { productID, name, category, quantity, price, imageData } = req.body;
