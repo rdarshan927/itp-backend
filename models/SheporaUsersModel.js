@@ -19,6 +19,11 @@ const userSchema = new Schema({
         required: [true, "Address is required"],
         minlength: [10, "Address must be at least 10 characters long"],
     },
+    deliveryAddress: {
+        type: String,
+        required: [true, "Address is required"],
+        minlength: [10, "Address must be at least 10 characters long"],
+    },
     phoneNumber: {
         type: String, // Change to String
         required: [true, "Phone number is required"],
@@ -28,6 +33,11 @@ const userSchema = new Schema({
             },
             message: props => `${props.value} is not a valid 10-digit phone number!`
         }
+    },
+    receiverPhoneNumber: {
+        type: String,
+        required: [true, "Address is required"],
+        minlength: [10, "Address must be at least 10 characters long"],
     },
     password: {
         type: String,

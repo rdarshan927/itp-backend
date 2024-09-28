@@ -1,9 +1,10 @@
 const CartModel = require('../models/CartModel')
+const UserModel = require('../models/SheporaUsersModel')
 const mongoose = require('mongoose')
 
 const createCart = async(req, res) => {
     try {
-        const { productID, productName, quantity, price, image } = req.body;
+        const { productID, productName, quantity, price, image, userEmail } = req.body;
         const alreadyExist = await CartModel.findOne({productID});
 
         if (alreadyExist){
@@ -11,7 +12,7 @@ const createCart = async(req, res) => {
         }
 
         const newCart = new CartModel({
-            productID, productName, quantity, price, image
+            productID, productName, quantity, price, image, userEmail
         });
 
         await newCart.save();
@@ -23,18 +24,33 @@ const createCart = async(req, res) => {
 }
 
 const getCart = async(req, res) => {
+    console.log('getCart endpoint hit!');
+    const userEmail = req.params.id;
+    console.log(userEmail);
     try {
-        const carts = await CartModel.find()
-        res.status(200).json(carts)
+        const carts = await CartModel.find({userEmail: userEmail});
+        res.status(200).json(carts);
     } catch (error){
-        res.status(500).json({message: 'There was an error while reading Cart!'})
-        console.log(error)
+        res.status(500).json({message: 'There was an error while reading Cart!'});
+        console.log(error);
+    }
+}
+
+const getDelivery = async(req, res) => {
+    const userEmail = req.params.id;
+    console.log('Delivery : ', userEmail);
+    try {
+        const delivery = await UserModel.find({email: userEmail}).select('deliveryAddress receiverPhoneNumber');
+        res.status(200).json(delivery);
+    } catch (error){
+        res.status(500).json({message: 'There was an error while reading delivery details!'});
+        console.log(error);
     }
 }
 
 const getSingleCart = async(req, res) => {
     try {
-        const cart = await CartModel.findById(req.params.id)
+        const cart = await CartModel.findById(req.params.id);
 
         if(!cart) {
             return res.status(404).json({message: 'There are no any cart that matches your ID!'});
@@ -111,4 +127,31 @@ const deleteCart = async(req, res) => {
     }
 }
 
-module.exports = { createCart, getCart, getSingleCart, updateCart, deleteCart } 
+const updateDelivery = async (req, res) => {
+    try {
+        const email = req.params.id;
+        const {receiverPhoneNumber, deliveryAddress} = req.body;
+
+        const response = await UserModel.findOneAndUpdate(
+            { email },
+            { 
+                receiverPhoneNumber, 
+                deliveryAddress
+            },
+            { new: true } 
+        );
+
+        if (!response) {
+            return res.status(400).json({ message: 'User doesn\'t exist!' });
+        }
+
+        res.status(200).json(response);
+        console.log("success", response);
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'There was an error while updating the delivery details!' });
+    }
+}
+
+module.exports = { createCart, getCart, getSingleCart, updateCart, deleteCart, getDelivery, updateDelivery } 
