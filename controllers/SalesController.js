@@ -10,6 +10,35 @@ const getInvoice = async(req, res) => {
     }
 }
 
+const getSingleInvoice = async (req, res) => {
+    try {
+        // Get the invoice ID from the request parameters
+        const { id } = req.params;
+
+        // Check if id is a valid ObjectId before proceeding
+        if (!id || id.length !== 24) {
+            return res.status(400).json({ message: "Invalid ID format" });
+        }
+
+        // Find the invoice by ID
+        const invoice = await Invoice.findById(id);
+
+        // If no invoice is found, return a 404 error
+        if (!invoice) {
+            return res.status(404).json({ message: "Invoice not found" });
+        }
+
+        // Return the found invoice
+        res.status(200).json({ invoice });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+module.exports = { getInvoice };
+
+
 const deleteInvoice = async(req, res) => {
     const ID = req.params.id;
     console.log('came : ', ID);
@@ -127,4 +156,4 @@ const getSalesComparison = async (req, res) => {
 };
 
 
-module.exports = { getInvoice, updateInvoice, deleteInvoice, getMonthlyTotals, getSalesComparison };
+module.exports = { getInvoice, getSingleInvoice, updateInvoice, deleteInvoice, getMonthlyTotals, getSalesComparison };
