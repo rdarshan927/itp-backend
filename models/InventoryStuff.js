@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const rolesModel = new mongoose.Schema({
     stuffID: {
-        type: Number,
+        type: String,
         required: [true, 'Stuff ID is required'],
         unique: true, 
         min: [5, 'Stuff ID must be 5 digits long'], 
@@ -10,7 +10,7 @@ const rolesModel = new mongoose.Schema({
     stuffName: {
         type: String,
         required: [true, 'Stuff Name is required'],
-        minlength: [10, 'Stuff Name must be at least 10 characters long'], 
+        minlength: [2, 'Stuff Name must be at least 2 characters long'], 
         maxlength: [20, 'Stuff Name cannot exceed 20 characters'] 
     },
     price: {
