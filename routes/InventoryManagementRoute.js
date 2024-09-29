@@ -9,6 +9,8 @@ const {
   getSingleSalesInventoryItem,
   updateSalesInventoryItem,
   deleteSalesInventoryItem,
+  getAllInventoryRecords,
+  createInventoryRecord
 } = require("../controllers/InventoryManagementController");
 const express = require("express");
 
@@ -27,5 +29,9 @@ route.get("/inventory/getsalesitems", getSalesInventoryItems);
 route.get("/inventory/get/idsalesitem/:id", getSingleSalesInventoryItem);
 route.patch("/inventory/updatesalesitem/:id", updateSalesInventoryItem);
 route.delete("/inventory/deletesalesitem/:id", deleteSalesInventoryItem);
+
+// Inventory records
+route.get("/inventory/getallrecords", getAllInventoryRecords);
+route.post("/inventory/addinventoryrecord", createInventoryRecord);
 
 module.exports = route;
