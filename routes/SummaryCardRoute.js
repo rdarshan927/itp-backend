@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { getAllInventoryItems } = require('../controllers/SummaryCardController');
+const { getSummaryCardData } = require('../controllers/SummaryCardController'); // Use the combined controller
 
-// Route to get all inventory items and calculate the total cost
-router.get('/inventory', getAllInventoryItems);
+// Route to get the summary of inventory items and sales (total cost + total sales)
+router.get('/summary', getSummaryCardData);
 
 module.exports = router;
