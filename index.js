@@ -18,6 +18,7 @@ const ordersroutes = require('./routes/OrdersRoute');
 const cart = require('./routes/CartRoute');
 const stripepay = require('./routes/PaymentRoute');
 const sheporaUsers = require('./routes/SheporaUsersRoutes');
+const employeemanagement = require('./routes/EmployeeManaementRoutes');
 const inventory = require('./routes/InventoryManagementRoute');
 const summaryCardRoute = require('./routes/SummaryCardRoute');
 const barchart = require('./routes/BarChartRoute'); 
@@ -50,6 +51,7 @@ app.use('/api', deliveryroutes);
 app.use('/api', cart);
 app.use('/api', stripepay);
 app.use('/api', sheporaUsers);
+app.use('/api', employeemanagement);
 app.use('/api', inventory);
 app.use('/api', ordersroutes);
 
