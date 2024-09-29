@@ -8,6 +8,7 @@ const userSchema = new Schema({
     },
     cropType:{
         type:String,
+        required:true,//validation
        
     },
     harvestDate:{
