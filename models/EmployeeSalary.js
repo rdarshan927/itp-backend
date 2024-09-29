@@ -3,10 +3,12 @@ const mongoose = require('mongoose')
 const rolesModel = new mongoose.Schema ({
     salaryID: {
         type: String,
+        unique: true, 
         required: true,
     },
     userID: {
         type: String,
+        unique: true, 
         required: true,
     },
     basicSalary: {
