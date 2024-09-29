@@ -18,6 +18,8 @@ const ordersroutes = require('./routes/OrdersRoute');
 const cart = require('./routes/CartRoute');
 const stripepay = require('./routes/PaymentRoute');
 const sheporaUsers = require('./routes/SheporaUsersRoutes');
+const harvestData = require("./routes/HarvestRout");
+
 const employeemanagement = require('./routes/EmployeeManaementRoutes');
 const inventory = require('./routes/InventoryManagementRoute');
 const summaryCardRoute = require('./routes/SummaryCardRoute');
@@ -26,6 +28,8 @@ const barchart = require('./routes/BarChartRoute');
 
 
 // Middleware to parse JSON
+app.use(express.json());
+
 app.use(express.json({ limit: '50mb' }));
 app.use(cookieParser());
 app.use(logger('dev'));
@@ -51,6 +55,7 @@ app.use('/api', deliveryroutes);
 app.use('/api', cart);
 app.use('/api', stripepay);
 app.use('/api', sheporaUsers);
+app.use ('/harvest',harvestData)
 app.use('/api', employeemanagement);
 app.use('/api', inventory);
 app.use('/api', ordersroutes);
