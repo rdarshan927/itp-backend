@@ -31,7 +31,7 @@ route.patch("/inventory/updatesalesitem/:id", updateSalesInventoryItem);
 route.delete("/inventory/deletesalesitem/:id", deleteSalesInventoryItem);
 
 // Inventory records
-route.get("/inventory/getallrecords", getAllInventoryRecords);
+route.get("/inventory/getallrecords/:type", getAllInventoryRecords);
 route.post("/inventory/addinventoryrecord", createInventoryRecord);
 
 module.exports = route;
