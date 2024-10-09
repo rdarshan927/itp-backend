@@ -19,6 +19,7 @@ const cart = require('./routes/CartRoute');
 const stripepay = require('./routes/PaymentRoute');
 const sheporaUsers = require('./routes/SheporaUsersRoutes');
 const harvestData = require("./routes/HarvestRout");
+const plantSchedule = require("./routes/PlantScheduleRoute")
 
 const employeemanagement = require('./routes/EmployeeManaementRoutes');
 const inventory = require('./routes/InventoryManagementRoute');
@@ -62,6 +63,7 @@ app.use('/api', ordersroutes);
 
 app.use('/api', summaryCardRoute);
 app.use('/api',barchart);
+app.use('/plantSchedules', plantSchedule);
 
 // Serve static files from the public directory
 // app.use(express.static(path.join(__dirname, 'public')));
