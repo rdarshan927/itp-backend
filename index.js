@@ -18,13 +18,21 @@ const ordersroutes = require('./routes/OrdersRoute');
 const cart = require('./routes/CartRoute');
 const stripepay = require('./routes/PaymentRoute');
 const sheporaUsers = require('./routes/SheporaUsersRoutes');
+const harvestData = require("./routes/HarvestRout");
+const harvestchart = require("./routes/harvestChart")
+const plantSchedule = require("./routes/PlantScheduleRoute")
+
+const employeemanagement = require('./routes/EmployeeManaementRoutes');
 const inventory = require('./routes/InventoryManagementRoute');
 const summaryCardRoute = require('./routes/SummaryCardRoute');
 const barchart = require('./routes/BarChartRoute'); 
+const adminLogin = require('./routes/SheporaAdminRouter');
 
 
 
 // Middleware to parse JSON
+app.use(express.json());
+
 app.use(express.json({ limit: '50mb' }));
 app.use(cookieParser());
 app.use(logger('dev'));
@@ -50,11 +58,16 @@ app.use('/api', deliveryroutes);
 app.use('/api', cart);
 app.use('/api', stripepay);
 app.use('/api', sheporaUsers);
+app.use ('/harvest',harvestData)
+app.use('/api', employeemanagement);
 app.use('/api', inventory);
 app.use('/api', ordersroutes);
-
+app.use('/harvest', harvestchart)
 app.use('/api', summaryCardRoute);
 app.use('/api',barchart);
+app.use('/api',adminLogin);
+
+app.use('/plantSchedules', plantSchedule);
 
 // Serve static files from the public directory
 // app.use(express.static(path.join(__dirname, 'public')));
