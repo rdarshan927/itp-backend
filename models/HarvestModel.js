@@ -12,7 +12,7 @@ const userSchema = new Schema({
        
     },
     harvestDate:{
-        type:String,
+        type:Date,
         required:true, // validation
     },
     quantity:{

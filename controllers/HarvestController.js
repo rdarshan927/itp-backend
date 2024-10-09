@@ -1,4 +1,5 @@
 const Harvest =require("../models/HarvestModel");
+
 //Read data
 const getHarvestData = async (req, res, next) => {
     
@@ -90,6 +91,7 @@ const deleteHarvest = async (req, res, next) =>{
     return res.status(200).json({harvest});
 
 }
+
 
 
 exports.getHarvestData = getHarvestData;
