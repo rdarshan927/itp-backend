@@ -1,7 +1,7 @@
 const PDFDocument = require('pdfkit'); // Declare PDFDocument once
 const fs = require('fs');
 const path = require('path');
-const { sendEmail } = require('./MailController');
+const { sendEmail } = require('./DeliveryMailController');
 
 const Delivery = require('../models/DeliveryModel');
 const Packing = require('../models/PackingModel');
