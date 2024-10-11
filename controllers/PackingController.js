@@ -50,7 +50,7 @@ const createpacking = async (req, res) => {
 
         // Check if orderId or email already exists
         const alreadyExist = await PackingModel.findOne({ 
-            $or: [{ orderId: new RegExp(`^${orderId}$`, 'i') }, { senderemail: new RegExp(`^${senderemail}$`, 'i') }] 
+            $or: [{ orderId: new RegExp(`^${orderId}$`, 'i') }] 
         });
 
         if (alreadyExist) {
