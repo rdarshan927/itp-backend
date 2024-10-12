@@ -155,5 +155,39 @@ const getSalesComparison = async (req, res) => {
   }
 };
 
+// Function to get the number of total previous customers and new customers for the current month
+const getCustomerStats = async (req, res) => {
+  console.log("came")
+    const startOfCurrentMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+  console.log("came2")
+    try {
+        // Total customers before the current month
+        const previousCustomers = await Invoice.aggregate([
+            { $match: { createdAt: { $lt: startOfCurrentMonth } } },
+            { $group: { _id: "$userID" } }, // Group by userID to get distinct customers
+            { $count: "totalPreviousCustomers" }
+        ]);
+        console.log("came3")
 
-module.exports = { getInvoice, getSingleInvoice, updateInvoice, deleteInvoice, getMonthlyTotals, getSalesComparison };
+        // Customers in the current month
+        const newCustomers = await Invoice.aggregate([
+            { $match: { createdAt: { $gte: startOfCurrentMonth } } },
+            { $group: { _id: "$userID" } }, // Group by userID to get distinct customers
+            { $count: "newCustomersThisMonth" }
+        ]);
+
+        console.log("came4")
+        // Send the result to the client
+        return res.status(200).json({
+            totalPreviousCustomers: previousCustomers[0]?.totalPreviousCustomers || 0,
+            newCustomersThisMonth: newCustomers[0]?.newCustomersThisMonth || 0
+        });
+        
+    } catch (error) {
+        console.error('Error fetching customer stats:', error);
+        throw error;
+    }
+};
+
+
+module.exports = { getInvoice, getSingleInvoice, updateInvoice, deleteInvoice, getMonthlyTotals, getSalesComparison, getCustomerStats };
