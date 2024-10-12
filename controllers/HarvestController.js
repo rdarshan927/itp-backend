@@ -65,7 +65,7 @@ const updateHarvest = async (req, res, next) => {
             {harvestId:harvestId, cropType:cropType, harvestDate:harvestDate, quantity:quantity, quality:quality, unit:unit});
             harvest = await harvest.save();
     }catch{
-        console.log(err);
+        // console.log(err);
     }
     if (!harvest){
         return res.status(404).json({message:"Unable to update hatvest data"});

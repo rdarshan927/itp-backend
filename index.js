@@ -19,7 +19,7 @@ const cart = require('./routes/CartRoute');
 const stripepay = require('./routes/PaymentRoute');
 const sheporaUsers = require('./routes/SheporaUsersRoutes');
 const harvestData = require("./routes/HarvestRout");
-
+const Attendance = require('./routes/AttendanceRoute');
 const employeemanagement = require('./routes/EmployeeManaementRoutes');
 const inventory = require('./routes/InventoryManagementRoute');
 const summaryCardRoute = require('./routes/SummaryCardRoute');
@@ -49,7 +49,7 @@ app.use('/api', employeeRole);
 app.use('/api', Sales);
 app.use('/api', inventoryStuffPayment);
 app.use('/api', EmployeeSalary);
-
+app.use('/api/attendance', Attendance);
 app.use('/api', packingroutes);
 app.use('/api', deliveryroutes);
 app.use('/api', cart);
