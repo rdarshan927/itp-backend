@@ -21,7 +21,6 @@ const sheporaUsers = require('./routes/SheporaUsersRoutes');
 const harvestData = require("./routes/HarvestRout");
 const harvestchart = require("./routes/harvestChart")
 const plantSchedule = require("./routes/PlantScheduleRoute")
-
 const employeemanagement = require('./routes/EmployeeManaementRoutes');
 const inventory = require('./routes/InventoryManagementRoute');
 const summaryCardRoute = require('./routes/SummaryCardRoute');
@@ -52,7 +51,6 @@ app.use('/api', employeeRole);
 app.use('/api', Sales);
 app.use('/api', inventoryStuffPayment);
 app.use('/api', EmployeeSalary);
-
 app.use('/api', packingroutes);
 app.use('/api', deliveryroutes);
 app.use('/api', cart);
@@ -66,7 +64,6 @@ app.use('/harvest', harvestchart)
 app.use('/api', summaryCardRoute);
 app.use('/api',barchart);
 app.use('/api',adminLogin);
-
 app.use('/plantSchedules', plantSchedule);
 
 // Serve static files from the public directory

@@ -36,8 +36,6 @@ const getSingleInvoice = async (req, res) => {
     }
 };
 
-module.exports = { getInvoice };
-
 
 const deleteInvoice = async(req, res) => {
     const ID = req.params.id;
@@ -155,11 +153,10 @@ const getSalesComparison = async (req, res) => {
   }
 };
 
-// Function to get the number of total previous customers and new customers for the current month
 const getCustomerStats = async (req, res) => {
-  console.log("came")
+
     const startOfCurrentMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-  console.log("came2")
+
     try {
         // Total customers before the current month
         const previousCustomers = await Invoice.aggregate([
@@ -167,7 +164,6 @@ const getCustomerStats = async (req, res) => {
             { $group: { _id: "$userID" } }, // Group by userID to get distinct customers
             { $count: "totalPreviousCustomers" }
         ]);
-        console.log("came3")
 
         // Customers in the current month
         const newCustomers = await Invoice.aggregate([
@@ -176,7 +172,6 @@ const getCustomerStats = async (req, res) => {
             { $count: "newCustomersThisMonth" }
         ]);
 
-        console.log("came4")
         // Send the result to the client
         return res.status(200).json({
             totalPreviousCustomers: previousCustomers[0]?.totalPreviousCustomers || 0,
