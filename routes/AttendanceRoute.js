@@ -10,4 +10,6 @@ router.put('/checkout', attendanceController.checkout);
 
 router.get('/', attendanceController.getAttendanceRecords);
 
+router.get('/salaryattendance/:id', attendanceController.getMatchingAttendanceWithSalary);
+
 module.exports = router;
