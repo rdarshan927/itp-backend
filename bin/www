@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+/**
+ * Licensed under the Shepora Flower Plant Management System License (v1.0)
+ * See the LICENSE.txt file for more details.
+ */
 
 const app = require('../index');
 const http = require('http');
