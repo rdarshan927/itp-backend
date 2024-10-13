@@ -1,3 +1,8 @@
+/**
+ * Licensed under the Shepora Flower Plant Management System License (v1.0)
+ * See the LICENSE.txt file for more details.
+ */
+
 const Joi = require('joi');
 
 const loginValidation = (req, res, next) => {

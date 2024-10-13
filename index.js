@@ -1,3 +1,8 @@
+/**
+ * Licensed under the Shepora Flower Plant Management System License (v1.0)
+ * See the LICENSE.txt file for more details.
+ */
+
 // index.js
 const express = require('express');
 const path = require('path');

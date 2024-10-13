@@ -1,3 +1,8 @@
+/**
+ * Licensed under the Shepora Flower Plant Management System License (v1.0)
+ * See the LICENSE.txt file for more details.
+ */
+
 const jwt = require('jsonwebtoken');
 const ensureAuthenticated = (req, res, next) => {
     const auth = req.headers['authorization'];
