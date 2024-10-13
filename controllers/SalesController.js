@@ -36,8 +36,6 @@ const getSingleInvoice = async (req, res) => {
     }
 };
 
-module.exports = { getInvoice };
-
 
 const deleteInvoice = async(req, res) => {
     const ID = req.params.id;
@@ -155,5 +153,36 @@ const getSalesComparison = async (req, res) => {
   }
 };
 
+const getCustomerStats = async (req, res) => {
 
-module.exports = { getInvoice, getSingleInvoice, updateInvoice, deleteInvoice, getMonthlyTotals, getSalesComparison };
+    const startOfCurrentMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+
+    try {
+        // Total customers before the current month
+        const previousCustomers = await Invoice.aggregate([
+            { $match: { createdAt: { $lt: startOfCurrentMonth } } },
+            { $group: { _id: "$userID" } }, // Group by userID to get distinct customers
+            { $count: "totalPreviousCustomers" }
+        ]);
+
+        // Customers in the current month
+        const newCustomers = await Invoice.aggregate([
+            { $match: { createdAt: { $gte: startOfCurrentMonth } } },
+            { $group: { _id: "$userID" } }, // Group by userID to get distinct customers
+            { $count: "newCustomersThisMonth" }
+        ]);
+
+        // Send the result to the client
+        return res.status(200).json({
+            totalPreviousCustomers: previousCustomers[0]?.totalPreviousCustomers || 0,
+            newCustomersThisMonth: newCustomers[0]?.newCustomersThisMonth || 0
+        });
+        
+    } catch (error) {
+        console.error('Error fetching customer stats:', error);
+        throw error;
+    }
+};
+
+
+module.exports = { getInvoice, getSingleInvoice, updateInvoice, deleteInvoice, getMonthlyTotals, getSalesComparison, getCustomerStats };

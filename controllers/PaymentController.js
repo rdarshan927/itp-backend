@@ -20,7 +20,25 @@ const handlePayment = async(req, res) => {
             currency:"lkr",
             product_data:{
                 name:product.productName,
-                images:[product.image]
+                images:[
+                    product.productName === "Floral Fantasy"
+                    ? "https://raw.githubusercontent.com/BanditBytes/image/refs/heads/main/Floral%20Fantasy.jpeg"
+                    : product.productName === "Rose"
+                    ? "https://raw.githubusercontent.com/BanditBytes/image/refs/heads/main/Rose.jpeg"
+                    : product.productName === "Sunflower"
+                    ? "https://raw.githubusercontent.com/BanditBytes/image/refs/heads/main/Sunflower.jpeg"
+                    : product.productName === "Tulip Heaven"
+                    ? "https://raw.githubusercontent.com/BanditBytes/image/refs/heads/main/Tulip%20Heaven.jpeg"
+                    : product.productName === "White Daisy"
+                    ? "https://raw.githubusercontent.com/BanditBytes/image/refs/heads/main/White%20Daisy.jpeg"
+                    : product.productName === "Romance"
+                    ? "https://raw.githubusercontent.com/BanditBytes/image/refs/heads/main/Romance.jpeg"
+                    : product.productName === "Pink Rose"
+                    ? "https://raw.githubusercontent.com/BanditBytes/image/refs/heads/main/Pink%20Rose.jpeg"
+                    : product.productName === "Pink Rose Bouquet"
+                    ? "https://raw.githubusercontent.com/BanditBytes/image/refs/heads/main/Pink%20Rose%20B.jpeg"
+                    : "https://raw.githubusercontent.com/BanditBytes/image/refs/heads/main/loading.png"
+                ]
             },
             unit_amount: Math.round(product.price * 100),
         },
