@@ -57,13 +57,13 @@ const getByID = async (req, res, next) =>{
 const updateHarvest = async (req, res, next) => {
     
     const id = req.params.id;
-    const {harvestId,cropType,harvestDate,quantity,quality,unit} = req.body;
+    const {cropType,harvestDate,quantity,quality,unit} = req.body;
 
     let harvest;
 
     try{
         harvest = await Harvest.findByIdAndUpdate(id,
-            {harvestId:harvestId, cropType:cropType, harvestDate:harvestDate, quantity:quantity, quality:quality, unit:unit});
+            { cropType:cropType, harvestDate:harvestDate, quantity:quantity, quality:quality, unit:unit});
             harvest = await harvest.save();
     }catch{
         console.log(err);
