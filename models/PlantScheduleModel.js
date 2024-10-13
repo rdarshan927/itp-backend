@@ -2,12 +2,12 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const getBloomingDuration = require('./getBloomingDuration');
 
-const floweringDurations = {
+{/*const floweringDurations = {
     "Roses": 50, // Roses bloom in 50 days
     "Lilies": 40, // Lilies bloom in 40 days
     "Tulips": 30, // Tulips bloom in 30 days
     
-  };
+  };*/}
 
 const plantScheduleSchema =new Schema({
     ScheduleID:{
