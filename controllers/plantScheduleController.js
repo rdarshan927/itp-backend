@@ -27,61 +27,54 @@ const getAllPlantSchedules = async (req, res , next) => {
 
 //insert part
 const addPlantSchedules = async (req, res, next) => {
-    const { ScheduleID, PlantName, Field, Resources, WeatherCondition } = req.body;
-    
-    console.log("Request Body:", req.body);
+    const { PlantName, Field, Resources, WeatherCondition } = req.body;
 
-    if (!ScheduleID || !PlantName || !Field) {
-        return res.status(400).json({ message: "ScheduleID, PlantName, and Field are required" });
+    let newScheduleID;
+    try {
+        const lastSchedule = await PlantSchedule.findOne().sort({ ScheduleID: -1 });
+        if (lastSchedule && lastSchedule.ScheduleID) {
+            const lastIDNumber = parseInt(lastSchedule.ScheduleID.replace('S', '')); // Extract number
+            newScheduleID = 'S' + (lastIDNumber + 1).toString().padStart(3, '0');   // Increment and format
+        } else {
+            newScheduleID = 'S001';  // Start from S001 if no schedules exist
+        }
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Error fetching last schedule ID" });
+    }
+
+    if (!PlantName || !Field) {
+        return res.status(400).json({ message: "PlantName and Field are required" });
     }
 
     let newplantSchedule;
 
     try {
-        const existingSchedule = await PlantSchedule.findOne({ ScheduleID });
-        console.log("Existing Schedule:", existingSchedule);
-       
-        if (existingSchedule) {
-            return res.status(400).json({ message: "ScheduleID already exists." });
-        }
-
-        // Convert timestamp to a Date object
         const plantedDate = new Date();
-
-        if (PlantName) {
-            const bloomingDuration = await getBloomingDuration(PlantName);
-            
-            // Clone the plantedDate and calculate expected blooming date
-            const expectedBloomingDate = new Date(plantedDate);
-            expectedBloomingDate.setDate(plantedDate.getDate() + bloomingDuration);
-            
-            console.log(bloomingDuration, "Expected Blooming Duration");
-            
-            
-            newplantSchedule = new PlantSchedule({
-                ScheduleID,
-                PlantName,
-                Field,
-                Resources,
-                WeatherCondition,
-                PlantedDate: plantedDate,  // Save the planted date
-                ExpectedBloomingDate: expectedBloomingDate // Save the expected blooming date
-            });
-
-            console.log("Saving Plant Schedule:", newplantSchedule);
-            
-            await newplantSchedule.save();
-
-            await sendEmailNotification(newplantSchedule);
+        let bloomingDuration = await getBloomingDuration(PlantName);
+        if (!bloomingDuration) {
+            return res.status(400).json({ message: "Invalid plant name. Unable to retrieve blooming duration." });
         }
 
+        // Calculate expected blooming date
+        const expectedBloomingDate = new Date(plantedDate);
+        expectedBloomingDate.setDate(plantedDate.getDate() + bloomingDuration);
+
+        newplantSchedule = new PlantSchedule({
+            ScheduleID: newScheduleID,
+            PlantName,
+            Field,
+            Resources,
+            WeatherCondition,
+            PlantedDate: plantedDate,
+            ExpectedBloomingDate: expectedBloomingDate,
+        });
+
+        await newplantSchedule.save();
+        await sendEmailNotification(newplantSchedule);
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: "Error adding plant schedule" });
-    }
-
-    if (!newplantSchedule) {
-        return res.status(404).json({ message: "Unable to add plant schedule" });
     }
 
     return res.status(200).json({ newplantSchedule });
@@ -124,7 +117,13 @@ const updatePlantSchedule = async(req ,res, next) => {
                 WeatherCondition:WeatherCondition,
                 PlantedDate: PlantedDate, 
                 ExpectedBloomingDate: ExpectedBloomingDate
-            });
+            },{ new: true }); // Use `new: true` to return the updated document
+
+            if (!plantSchedule) {
+                return res.status(404).json({ message: "Unable to Update Plant Schedule" });
+            }
+
+
             plantSchedule = await plantSchedule.save();
     }catch(err){
         console.log(err);
@@ -177,8 +176,7 @@ const searchPlantSchedules = async (req, res , next)  => {
     }
 
     return res.status(200).json({plantSchedules});
-}
-
+};
 
 
 
