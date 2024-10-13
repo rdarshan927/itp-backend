@@ -4,8 +4,26 @@ const mongoose = require('mongoose')
 
 const createCart = async(req, res) => {
     try {
-        const { productID, productName, quantity, price, image, userEmail } = req.body;
+        const { productID, name, price, imageData } = req.body;
+        const userEmail = req.params.id;
+        console.log(userEmail)
+
+        // Check if user is logged in and exists
+        if (!userEmail) {
+            return res.status(401).json({ message: 'Login first!' });
+        }
+
+        // Check if the user exists in the database
+        const user = await UserModel.findOne({ email: userEmail });
+        if (!user) {
+            return res.status(401).json({ message: 'Login first!' });
+        }
+        
         const alreadyExist = await CartModel.findOne({productID});
+
+        const productName = name;
+        const image = imageData;
+        const quantity = 1;
 
         if (alreadyExist){
             return res.status(400).json({message: 'Product has been already added to Cart!'});

@@ -17,4 +17,11 @@ router.put('/deliveries/:id', DeliveryController.updateDelivery);
 // Route to delete a delivery by ID
 router.delete('/deliveries/:id', DeliveryController.deleteDelivery);
 
+// Route to download delivery receipt
+router.get('/deliveries/:id/receipt', DeliveryController.downloadReceipt);
+
+// Add this line in your delivery routes
+router.post('/deliveries/:id/send-email', DeliveryController.sendEmailToSender);
+
+
 module.exports = router;
