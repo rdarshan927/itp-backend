@@ -8,6 +8,9 @@ const User = require("../models/SheporaUsersModel");
 // Create User Controller
 const createUsers = async (req, res, next) => {
     const { email, name, address, phoneNumber, password } = req.body;
+
+    const receiverPhoneNumber = phoneNumber;
+    const deliveryAddress = address;
     
     try {
         // Check if the user already exists
@@ -39,7 +42,9 @@ const createUsers = async (req, res, next) => {
             name,
             address,
             phoneNumber,
-            password: encryptedPassword
+            password: encryptedPassword,
+            receiverPhoneNumber,
+            deliveryAddress
         });
 
         // Save the user to the database
