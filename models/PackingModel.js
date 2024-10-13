@@ -17,7 +17,7 @@ const PackingSchema = new mongoose.Schema({
         required: true
     },
     receivercontact: {
-        type: Number,
+        type: String,
         required: true
     },
     senderemail: {

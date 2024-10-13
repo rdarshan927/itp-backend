@@ -277,9 +277,23 @@ const deleteSalesInventoryItem = async (req, res) => {
 
 // Get all Inventory Records
 const getAllInventoryRecords = async (req, res) => {
+  const type = req.params.type;
   try {
     const inventoryRecords = await InventoryRecordsModel.find();
-    res.status(200).json(inventoryRecords);
+    console.log(inventoryRecords);
+    let filteredRecords;
+    if (type === "sales") {
+      filteredRecords = inventoryRecords.filter(
+        (record) =>
+          record.category === "flower" || record.category === "bouquet"
+      );
+    } else if (type === "resource") {
+      filteredRecords = inventoryRecords.filter(
+        (record) =>
+          record.category !== "flower" && record.category !== "bouquet"
+      );
+    }
+    res.status(200).json(filteredRecords);
   } catch (error) {
     res.status(500).json({
       message: "There was an error while retrieving the inventory records!",
